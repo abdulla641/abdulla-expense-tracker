@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Abdulla Expense Tracker</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+
+<meta name="theme-color" content="#007AFF">
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+<h1>💰 Expense Tracker</h1>
+<p>Personal Finance Manager</p>
+</header>
+
+
+<section class="dashboard">
+
+<div class="box">
+<h3>Total Spent</h3>
+<h2 id="totalSpent">QAR 0</h2>
+</div>
+
+<div class="box">
+<h3>This Month</h3>
+<h2 id="monthSpent">QAR 0</h2>
+</div>
+
+<div class="box">
+<h3>Transactions</h3>
+<h2 id="transactionCount">0</h2>
+</div>
+
+</section>
+
+
+
+<section class="card">
+
+<h2>➕ Add Expense</h2>
+
+
+<label>Amount</label>
+<input 
+id="amount"
+type="number"
+placeholder="Enter amount">
+
+
+<label>Currency</label>
+<select id="currency">
+
+<option value="QAR">
+🇶🇦 QAR
+</option>
+
+<option value="INR">
+🇮🇳 INR
+</option>
+
+</select>
+
+
+
+<label>Wallet</label>
+
+<select id="wallet">
+
+<option value="Qatar">
+🇶🇦 Qatar Expenses
+</option>
+
+<option value="India Vacation">
+🇮🇳 India Vacation
+</option>
+
+</select>
+
+
+
+<label>Category</label>
+
+<select id="category">
+
+<option>Food</option>
+<option>Transport</option>
+<option>Fuel</option>
+<option>Hotel</option>
+<option>Shopping</option>
+<option>Family</option>
+<option>Medical</option>
+<option>Entertainment</option>
+<option>Charity</option>
+<option>Others</option>
+
+</select>
+
+
+
+<label>Payment Method</label>
+
+<select id="payment">
+
+<option>Cash</option>
+<option>Card</option>
+<option>Bank</option>
+<option>UPI</option>
+
+</select>
+
+
+
+<label>Note</label>
+
+<input 
+id="note"
+type="text"
+placeholder="Example: Dinner">
+
+
+<button onclick="addExpense()">
+Add Expense
+</button>
+
+
+</section>
+
+
+
+
+<section class="card">
+
+<h2>📜 History</h2>
+
+<div id="history">
+
+</div>
+
+
+</section>
+
+
+
+
+<section class="card">
+
+<h2>💾 Backup</h2>
+
+<button onclick="exportData()">
+Export Backup
+</button>
+
+
+<button onclick="clearData()" class="danger">
+Clear All Data
+</button>
+
+
+</section>
+
+
+</div>
+
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
