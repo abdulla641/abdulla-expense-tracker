@@ -1,61 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Abdulla Expense Tracker</title>
+<title>Abdulla Finance Tracker</title>
 
 <link rel="manifest" href="manifest.json">
+
 <link rel="stylesheet" href="style.css">
 
-<meta name="theme-color" content="#007AFF">
+<meta name="theme-color" content="#007aff">
+
 </head>
+
 
 <body>
 
+
 <div class="app">
 
+
 <header>
-<h1>💰 Expense Tracker</h1>
-<p>Personal Finance Manager</p>
+
+<h1>💰 Abdulla Finance</h1>
+
+<p>Personal Money Manager</p>
+
 </header>
 
 
+
+<!-- Dashboard -->
+
 <section class="dashboard">
 
-<div class="box">
-<h3>Total Spent</h3>
-<h2 id="totalSpent">QAR 0</h2>
-</div>
 
 <div class="box">
+
+<h3>Total QAR Spent</h3>
+
+<h2 id="totalSpent">
+QAR 0
+</h2>
+
+</div>
+
+
+
+<div class="box">
+
 <h3>This Month</h3>
-<h2 id="monthSpent">QAR 0</h2>
+
+<h2 id="monthSpent">
+QAR 0
+</h2>
+
 </div>
 
+
+
 <div class="box">
+
 <h3>Transactions</h3>
-<h2 id="transactionCount">0</h2>
+
+<h2 id="transactionCount">
+0
+</h2>
+
 </div>
+
+
+
+<div class="box">
+
+<h3>Vacation</h3>
+
+<h2 id="vacationSpent">
+₹0
+</h2>
+
+</div>
+
 
 </section>
 
 
 
+
+
+<!-- Add Expense -->
+
 <section class="card">
+
 
 <h2>➕ Add Expense</h2>
 
 
-<label>Amount</label>
+
 <input 
 id="amount"
 type="number"
-placeholder="Enter amount">
+placeholder="Amount">
 
 
-<label>Currency</label>
+
 <select id="currency">
 
 <option value="QAR">
@@ -70,64 +122,86 @@ placeholder="Enter amount">
 
 
 
-<label>Wallet</label>
 
 <select id="wallet">
 
 <option value="Qatar">
-🇶🇦 Qatar Expenses
+
+🇶🇦 Qatar
+
 </option>
 
+
 <option value="India Vacation">
+
 🇮🇳 India Vacation
+
 </option>
+
 
 </select>
 
 
 
-<label>Category</label>
+
 
 <select id="category">
 
+
 <option>Food</option>
+
 <option>Transport</option>
+
 <option>Fuel</option>
+
 <option>Hotel</option>
+
 <option>Shopping</option>
+
 <option>Family</option>
+
 <option>Medical</option>
+
 <option>Entertainment</option>
+
 <option>Charity</option>
+
 <option>Others</option>
+
 
 </select>
 
 
 
-<label>Payment Method</label>
 
 <select id="payment">
 
+
 <option>Cash</option>
+
 <option>Card</option>
+
 <option>Bank</option>
+
 <option>UPI</option>
+
 
 </select>
 
 
 
-<label>Note</label>
 
-<input 
+<input
+
 id="note"
-type="text"
-placeholder="Example: Dinner">
+
+placeholder="Description">
 
 
 <button onclick="addExpense()">
+
 Add Expense
+
 </button>
 
 
@@ -136,9 +210,161 @@ Add Expense
 
 
 
+
+
+<!-- Budget -->
+
 <section class="card">
 
-<h2>📜 History</h2>
+
+<h2>🎯 Budget</h2>
+
+
+<label>
+
+Monthly Qatar Budget
+
+</label>
+
+
+<input
+
+id="budget"
+
+type="number"
+
+placeholder="Example: 4000">
+
+
+<button onclick="saveBudget()">
+
+Save Budget
+
+</button>
+
+
+<h3 id="budgetStatus">
+
+</h3>
+
+
+</section>
+
+
+
+
+
+
+
+<!-- Savings Goals -->
+
+
+<section class="card">
+
+
+<h2>🏦 Savings Goal</h2>
+
+
+<input
+
+id="goalName"
+
+placeholder="Goal name">
+
+
+
+
+<input
+
+id="goalAmount"
+
+type="number"
+
+placeholder="Target amount">
+
+
+
+<button onclick="saveGoal()">
+
+Save Goal
+
+</button>
+
+
+
+<p id="goalDisplay">
+
+</p>
+
+
+</section>
+
+
+
+
+
+
+
+<!-- Credit Card -->
+
+<section class="card">
+
+
+<h2>💳 Credit Card</h2>
+
+
+
+<input
+
+id="cardLimit"
+
+type="number"
+
+placeholder="Card Limit">
+
+
+
+<input
+
+id="cardUsed"
+
+type="number"
+
+placeholder="Outstanding">
+
+
+
+<button onclick="saveCard()">
+
+Save Card
+
+</button>
+
+
+
+<p id="cardDisplay">
+
+</p>
+
+
+</section>
+
+
+
+
+
+
+
+<!-- History -->
+
+
+<section class="card">
+
+
+<h2>
+📜 Transactions
+</h2>
+
 
 <div id="history">
 
@@ -150,21 +376,32 @@ Add Expense
 
 
 
+
+
 <section class="card">
 
-<h2>💾 Backup</h2>
+
+<h2>
+💾 Backup
+</h2>
+
 
 <button onclick="exportData()">
+
 Export Backup
+
 </button>
 
 
 <button onclick="clearData()" class="danger">
-Clear All Data
+
+Delete All
+
 </button>
 
 
 </section>
+
 
 
 </div>
@@ -173,5 +410,7 @@ Clear All Data
 
 <script src="app.js"></script>
 
+
 </body>
+
 </html>
