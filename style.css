@@ -1,253 +1,390 @@
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Arial, sans-serif;
-    background: #f2f2f7;
-    color: #111;
+*{
+box-sizing:border-box;
 }
 
 
-.app {
-    max-width: 500px;
-    margin: auto;
-    padding: 20px;
+body{
+
+margin:0;
+
+font-family:
+-apple-system,
+BlinkMacSystemFont,
+"SF Pro Display",
+Arial,
+sans-serif;
+
+background:#f2f2f7;
+
+color:#111;
+
 }
 
 
 
-header {
-    text-align: center;
-    margin-bottom: 20px;
+.app{
+
+max-width:520px;
+
+margin:auto;
+
+padding:20px;
+
 }
 
 
-header h1 {
-    font-size: 28px;
-    margin-bottom: 5px;
+
+header{
+
+text-align:center;
+
+margin-bottom:25px;
+
 }
 
 
-header p {
-    color: #777;
+header h1{
+
+font-size:30px;
+
+margin:5px;
+
 }
+
+
+header p{
+
+color:#777;
+
+}
+
+
 
 
 
 /* Dashboard */
 
-.dashboard {
 
-    display: grid;
-    grid-template-columns: repeat(2,1fr);
-    gap: 12px;
-    margin-bottom: 20px;
+.dashboard{
 
-}
+display:grid;
 
+grid-template-columns:repeat(2,1fr);
 
-.box {
+gap:12px;
 
-    background:white;
-    border-radius:20px;
-    padding:15px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.08);
-
-}
-
-
-.box h3 {
-
-    margin:0;
-    font-size:14px;
-    color:#777;
-
-}
-
-
-.box h2 {
-
-    margin-top:10px;
-    font-size:20px;
+margin-bottom:20px;
 
 }
 
 
 
+.box{
 
-.card {
+background:white;
 
-    background:white;
-    border-radius:22px;
-    padding:20px;
-    margin-bottom:18px;
+padding:18px;
 
-    box-shadow:
-    0 5px 20px rgba(0,0,0,0.08);
+border-radius:22px;
+
+box-shadow:
+0 5px 18px rgba(0,0,0,.08);
 
 }
 
 
-.card h2 {
 
-    margin-top:0;
-    font-size:20px;
+.box h3{
+
+font-size:13px;
+
+color:#777;
+
+margin:0;
+
+}
+
+
+
+.box h2{
+
+margin-top:10px;
+
+font-size:21px;
 
 }
 
 
 
 
-label {
 
-    display:block;
-    margin-top:12px;
-    margin-bottom:5px;
-    font-size:14px;
-    color:#555;
+/* Cards */
+
+
+.card{
+
+background:white;
+
+border-radius:24px;
+
+padding:20px;
+
+margin-bottom:18px;
+
+
+box-shadow:
+0 5px 20px rgba(0,0,0,.08);
 
 }
 
+
+
+.card h2{
+
+margin-top:0;
+
+font-size:21px;
+
+}
+
+
+
+
+
+/* Inputs */
 
 
 input,
-select {
-
-    width:100%;
-    padding:14px;
-
-    border-radius:14px;
-
-    border:1px solid #ddd;
-
-    font-size:16px;
-
-    background:#fafafa;
-
-}
+select{
 
 
+width:100%;
 
-button {
+padding:15px;
 
-    width:100%;
+margin-top:10px;
 
-    margin-top:15px;
+border-radius:15px;
 
-    padding:15px;
+border:
 
-    border:none;
+1px solid #ddd;
 
-    border-radius:15px;
+font-size:16px;
 
-    background:#007aff;
-
-    color:white;
-
-    font-size:17px;
-
-    font-weight:600;
-
-}
-
-
-
-button:active {
-
-    transform:scale(0.98);
-
-}
-
-
-
-.danger {
-
-    background:#ff3b30;
-
-}
-
-
-
-/* History */
-
-
-.expense-item {
-
-    padding:12px 0;
-
-    border-bottom:1px solid #eee;
-
-}
-
-
-
-.expense-top {
-
-    display:flex;
-
-    justify-content:space-between;
-
-    font-weight:bold;
-
-}
-
-
-
-.expense-details {
-
-    color:#777;
-
-    font-size:14px;
-
-    margin-top:5px;
+background:#fafafa;
 
 }
 
 
 
 
-/* Dark Mode */
+
+/* Buttons */
 
 
-@media (prefers-color-scheme: dark) {
+button{
 
 
-body {
+width:100%;
 
-    background:#000;
+padding:15px;
 
-    color:white;
+margin-top:15px;
+
+border:none;
+
+border-radius:16px;
+
+background:#007aff;
+
+color:white;
+
+font-size:17px;
+
+font-weight:600;
+
 
 }
+
+
+
+button:active{
+
+transform:scale(.98);
+
+}
+
+
+
+.danger{
+
+background:#ff3b30;
+
+}
+
+
+
+
+
+/* Transaction list */
+
+
+.expense-item{
+
+
+padding:14px 0;
+
+border-bottom:
+
+1px solid #eee;
+
+
+}
+
+
+
+.expense-top{
+
+
+display:flex;
+
+justify-content:space-between;
+
+font-weight:bold;
+
+
+}
+
+
+
+.expense-details{
+
+
+font-size:14px;
+
+color:#777;
+
+margin-top:5px;
+
+
+}
+
+
+
+
+
+
+/* Progress bars */
+
+
+.progress{
+
+height:12px;
+
+background:#ddd;
+
+border-radius:20px;
+
+overflow:hidden;
+
+margin-top:10px;
+
+
+}
+
+
+
+.progress-fill{
+
+height:100%;
+
+background:#34c759;
+
+width:0%;
+
+}
+
+
+
+
+
+
+/* Credit card */
+
+
+.credit{
+
+background:
+
+linear-gradient(
+135deg,
+#111,
+#444
+);
+
+color:white;
+
+padding:20px;
+
+border-radius:22px;
+
+}
+
+
+
+
+/* Dark mode */
+
+
+@media(prefers-color-scheme:dark){
+
+
+body{
+
+background:#000;
+
+color:white;
+
+}
+
 
 
 .card,
-.box {
+.box{
 
-    background:#1c1c1e;
+background:#1c1c1e;
 
 }
+
 
 
 input,
-select {
+select{
 
-    background:#2c2c2e;
+background:#2c2c2e;
 
-    color:white;
+color:white;
 
-    border-color:#444;
+border-color:#444;
 
 }
 
 
-header p,
-label,
-.expense-details {
 
-    color:#aaa;
+header p,
+.box h3,
+.expense-details{
+
+color:#aaa;
+
+}
+
+
+
+.progress{
+
+background:#333;
 
 }
 
