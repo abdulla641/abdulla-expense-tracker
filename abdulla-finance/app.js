@@ -1,6 +1,8 @@
-const defaultData={expenses:[],receivables:[],payables:[],cards:[],accounts:[],goals:[],investments:[],history:[]};
+const defaultData={expenses:[],receivables:[],payables:[],cards:[],accounts:[],goals:[],investments:[],history:[],pin:null};
 let financeData=JSON.parse(localStorage.getItem('abdullaFinance'))||defaultData;
 function saveData(){localStorage.setItem('abdullaFinance',JSON.stringify(financeData));updateDashboard();renderLists();}
+function setPin(){let p=prompt('Create 4 digit PIN');if(p&&p.length===4){financeData.pin=p;saveData();alert('PIN enabled');}}
+function unlock(){if(financeData.pin){let p=prompt('Enter PIN');if(p!==financeData.pin){document.body.innerHTML='<h2>Locked</h2>';}}}
 function addHistory(type,data){financeData.history.unshift({type,...data,date:new Date().toISOString()});}
 function addTransaction(type,name,amount,note=''){let item={id:Date.now(),name,amount:Number(amount),note,date:new Date().toISOString(),settled:0};financeData[type].push(item);addHistory(type,item);saveData();}
 function addReceive(){let n=receiveName.value,a=receiveAmount.value;if(n&&a)addTransaction('receivables',n,a);}
@@ -9,8 +11,7 @@ function addCard(){let n=cardName.value,l=cardLimit.value,o=cardOutstanding.valu
 function addCardPayment(id){let amount=Number(prompt('Payment amount'));let card=financeData.cards.find(x=>x.id===id);if(card&&amount){card.amount-=amount;card.payments.push({amount,date:new Date().toISOString()});addHistory('card-payment',{name:card.name,amount});saveData();}}
 function totals(){return {receive:financeData.receivables.reduce((a,b)=>a+b.amount,0),pay:financeData.payables.reduce((a,b)=>a+b.amount,0),cards:financeData.cards.reduce((a,b)=>a+b.amount,0)}}
 function reports(){let t=totals();return `📈 Reports<br>🟢 Receive: ${t.receive} QAR<br>🔴 Pay: ${t.pay} QAR<br>💳 Card Debt: ${t.cards} QAR<br>📚 Records: ${financeData.history.length}`}
-function analytics(){return reports();}
-function updateDashboard(){let t=totals();if(cash)cash.innerHTML=`${t.receive-t.pay} QAR`;if(receive)receive.innerHTML=`${t.receive} QAR`;if(pay)pay.innerHTML=`${t.pay} QAR`;if(cards)cards.innerHTML=`${t.cards} QAR`;if(summary)summary.innerHTML=`Total Receive: 🟢 ${t.receive} QAR<br>Total Pay: 🔴 ${t.pay} QAR<br>Credit Cards: 💳 ${t.cards} QAR<br>Net Position: ${t.receive-t.pay-t.cards} QAR<br><br>${analytics()}`;}
-function renderLists(){if(receiveList)receiveList.innerHTML=financeData.receivables.map(x=>`<p>🟢 ${x.name}: ${x.amount} QAR</p>`).join('');if(payList)payList.innerHTML=financeData.payables.map(x=>`<p>🔴 ${x.name}: ${x.amount} QAR</p>`).join('');if(cardList)cardList.innerHTML=financeData.cards.map(x=>`<p>💳 ${x.name}: ${x.amount} QAR | Limit ${x.limit} | Due ${x.due||'-'} <button onclick="addCardPayment(${x.id})">Pay</button></p>`).join('');if(historyList)historyList.innerHTML=financeData.history.slice(0,20).map(x=>`<p>${x.type}: ${x.name||''} ${x.amount||''}</p>`).join('');}
+function updateDashboard(){let t=totals();if(cash)cash.innerHTML=`${t.receive-t.pay} QAR`;if(receive)receive.innerHTML=`${t.receive} QAR`;if(pay)pay.innerHTML=`${t.pay} QAR`;if(cards)cards.innerHTML=`${t.cards} QAR`;if(summary)summary.innerHTML=reports();}
+function renderLists(){if(receiveList)receiveList.innerHTML=financeData.receivables.map(x=>`<p>🟢 ${x.name}: ${x.amount} QAR</p>`).join('');if(payList)payList.innerHTML=financeData.payables.map(x=>`<p>🔴 ${x.name}: ${x.amount} QAR</p>`).join('');if(cardList)cardList.innerHTML=financeData.cards.map(x=>`<p>💳 ${x.name}: ${x.amount} QAR</p>`).join('');}
 function exportBackup(){let blob=new Blob([JSON.stringify(financeData,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='abdulla-finance-backup.json';a.click();}
-updateDashboard();renderLists();
+window.onload=()=>{unlock();updateDashboard();renderLists();};
