@@ -1,19 +1,16 @@
 const defaultData={expenses:[],receivables:[],payables:[],cards:[],accounts:[],goals:[],investments:[],history:[],pin:null};
 let financeData=JSON.parse(localStorage.getItem('abdullaFinance'))||defaultData;
 function saveData(){localStorage.setItem('abdullaFinance',JSON.stringify(financeData));updateDashboard();renderLists();drawChart();}
-function setPin(){let p=prompt('Create 4 digit PIN');if(p&&p.length===4){financeData.pin=p;saveData();alert('PIN enabled');}}
-function unlock(){if(financeData.pin){let p=prompt('Enter PIN');if(p!==financeData.pin){document.body.innerHTML='<h2>Locked</h2>';}}}
 function addHistory(type,data){financeData.history.unshift({type,...data,date:new Date().toISOString()});}
-function addTransaction(type,name,amount,note=''){let item={id:Date.now(),name,amount:Number(amount),note,date:new Date().toISOString(),settled:0};financeData[type].push(item);addHistory(type,item);saveData();}
-function addReceive(){let n=receiveName.value,a=receiveAmount.value;if(n&&a)addTransaction('receivables',n,a);}
-function addPay(){let n=payName.value,a=payAmount.value;if(n&&a)addTransaction('payables',n,a);}
-function addCard(){let n=cardName.value,l=cardLimit.value,o=cardOutstanding.value,d=cardDue.value;if(n&&o){let card={id:Date.now(),name:n,limit:Number(l),amount:Number(o),due:d,payments:[]};financeData.cards.push(card);addHistory('card',card);saveData();}}
-function addCardPayment(id){let amount=Number(prompt('Payment amount'));let card=financeData.cards.find(x=>x.id===id);if(card&&amount){card.amount-=amount;card.payments.push({amount,date:new Date().toISOString()});addHistory('card-payment',{name:card.name,amount});saveData();}}
-function totals(){return {receive:financeData.receivables.reduce((a,b)=>a+b.amount,0),pay:financeData.payables.reduce((a,b)=>a+b.amount,0),cards:financeData.cards.reduce((a,b)=>a+b.amount,0)}}
-function reports(){let t=totals();return `📈 Reports<br>🟢 Receive: ${t.receive} QAR<br>🔴 Pay: ${t.pay} QAR<br>💳 Card Debt: ${t.cards} QAR<br>📚 Records: ${financeData.history.length}`}
-function updateDashboard(){let t=totals();if(cash)cash.innerHTML=`${t.receive-t.pay} QAR`;if(receive)receive.innerHTML=`${t.receive} QAR`;if(pay)pay.innerHTML=`${t.pay} QAR`;if(cards)cards.innerHTML=`${t.cards} QAR`;if(summary)summary.innerHTML=reports();}
-function drawChart(){let c=document.getElementById('financeChart');if(!c)return;let x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);let t=totals();let max=Math.max(t.receive,t.pay,t.cards,1);let data=[t.receive,t.pay,t.cards];let labels=['Receive','Pay','Cards'];data.forEach((v,i)=>{let h=(v/max)*120;x.fillStyle=i===0?'#22c55e':i===1?'#ef4444':'#3b82f6';x.fillRect(40+i*90,150-h,45,h);x.fillStyle='#111';x.fillText(labels[i],35+i*90,170);x.fillText(v+' QAR',35+i*90,15);});}
-function renderLists(){if(receiveList)receiveList.innerHTML=financeData.receivables.map(x=>`<p>🟢 ${x.name}: ${x.amount} QAR</p>`).join('');if(payList)payList.innerHTML=financeData.payables.map(x=>`<p>🔴 ${x.name}: ${x.amount} QAR</p>`).join('');if(cardList)cardList.innerHTML=financeData.cards.map(x=>`<p>💳 ${x.name}: ${x.amount} QAR</p>`).join('');}
-function exportBackup(){let blob=new Blob([JSON.stringify(financeData,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='abdulla-finance-backup.json';a.click();}
-function goSection(id){let el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}}
-window.onload=()=>{unlock();updateDashboard();renderLists();drawChart();document.querySelectorAll('nav button').forEach((b,i)=>{b.onclick=()=>{if(i===0)goSection('home');if(i===1)goSection('expenses');if(i===2)goSection('history');if(i===3)goSection('cardsSection');if(i===4)alert('Settings coming next');};});};
+function addTransaction(type,name,amount){financeData[type].push({id:Date.now(),name,amount:Number(amount)});addHistory(type,{name,amount:Number(amount)});saveData();}
+function addReceive(){if(receiveName.value&&receiveAmount.value)addTransaction('receivables',receiveName.value,receiveAmount.value);}
+function addPay(){if(payName.value&&payAmount.value)addTransaction('payables',payName.value,payAmount.value);}
+function addCard(){if(cardName.value&&cardOutstanding.value){financeData.cards.push({id:Date.now(),name:cardName.value,amount:Number(cardOutstanding.value)});saveData();}}
+function addSaving(){let n=savingName.value,a=savingAmount.value,t=savingTarget.value;if(n&&a){financeData.goals.push({name:n,saved:Number(a),target:Number(t||a)});saveData();}}
+function addInvestment(){let n=investmentName.value,a=investmentAmount.value,v=investmentValue.value;if(n&&a){financeData.investments.push({name:n,type:investmentType.value||'Other',amount:Number(a),value:Number(v||a)});saveData();}}
+function totals(){return {receive:financeData.receivables.reduce((a,b)=>a+b.amount,0),pay:financeData.payables.reduce((a,b)=>a+b.amount,0),cards:financeData.cards.reduce((a,b)=>a+b.amount,0),savings:financeData.goals.reduce((a,b)=>a+b.saved,0),investments:financeData.investments.reduce((a,b)=>a+b.value,0)}}
+function updateDashboard(){let t=totals();if(cash)cash.innerHTML=(t.receive-t.pay)+' QAR';if(receive)receive.innerHTML=t.receive+' QAR';if(pay)pay.innerHTML=t.pay+' QAR';if(cards)cards.innerHTML=t.cards+' QAR';if(summary)summary.innerHTML=`Savings: ${t.savings} QAR<br>Investments: ${t.investments} QAR`;}
+function renderLists(){if(receiveList)receiveList.innerHTML=financeData.receivables.map(x=>`<p>🟢 ${x.name}: ${x.amount}</p>`).join('');if(payList)payList.innerHTML=financeData.payables.map(x=>`<p>🔴 ${x.name}: ${x.amount}</p>`).join('');if(cardList)cardList.innerHTML=financeData.cards.map(x=>`<p>💳 ${x.name}: ${x.amount}</p>`).join('');}
+function drawChart(){}
+function exportBackup(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(financeData)]));a.download='backup.json';a.click();}
+window.onload=()=>{updateDashboard();renderLists();};
