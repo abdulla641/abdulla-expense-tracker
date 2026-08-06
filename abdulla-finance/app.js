@@ -1,6 +1,6 @@
 const defaultData={expenses:[],receivables:[],payables:[],cards:[],accounts:[],goals:[],investments:[],history:[],pin:null};
 let financeData=JSON.parse(localStorage.getItem('abdullaFinance'))||defaultData;
-function saveData(){localStorage.setItem('abdullaFinance',JSON.stringify(financeData));updateDashboard();renderLists();}
+function saveData(){localStorage.setItem('abdullaFinance',JSON.stringify(financeData));updateDashboard();renderLists();drawChart();}
 function setPin(){let p=prompt('Create 4 digit PIN');if(p&&p.length===4){financeData.pin=p;saveData();alert('PIN enabled');}}
 function unlock(){if(financeData.pin){let p=prompt('Enter PIN');if(p!==financeData.pin){document.body.innerHTML='<h2>Locked</h2>';}}}
 function addHistory(type,data){financeData.history.unshift({type,...data,date:new Date().toISOString()});}
@@ -12,6 +12,7 @@ function addCardPayment(id){let amount=Number(prompt('Payment amount'));let card
 function totals(){return {receive:financeData.receivables.reduce((a,b)=>a+b.amount,0),pay:financeData.payables.reduce((a,b)=>a+b.amount,0),cards:financeData.cards.reduce((a,b)=>a+b.amount,0)}}
 function reports(){let t=totals();return `📈 Reports<br>🟢 Receive: ${t.receive} QAR<br>🔴 Pay: ${t.pay} QAR<br>💳 Card Debt: ${t.cards} QAR<br>📚 Records: ${financeData.history.length}`}
 function updateDashboard(){let t=totals();if(cash)cash.innerHTML=`${t.receive-t.pay} QAR`;if(receive)receive.innerHTML=`${t.receive} QAR`;if(pay)pay.innerHTML=`${t.pay} QAR`;if(cards)cards.innerHTML=`${t.cards} QAR`;if(summary)summary.innerHTML=reports();}
+function drawChart(){let c=document.getElementById('financeChart');if(!c)return;let x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);let t=totals();let max=Math.max(t.receive,t.pay,t.cards,1);let data=[t.receive,t.pay,t.cards];let labels=['Receive','Pay','Cards'];data.forEach((v,i)=>{let h=(v/max)*120;x.fillStyle=i===0?'#22c55e':i===1?'#ef4444':'#3b82f6';x.fillRect(40+i*90,150-h,45,h);x.fillStyle='#111';x.fillText(labels[i],35+i*90,170);x.fillText(v+' QAR',35+i*90,15);});}
 function renderLists(){if(receiveList)receiveList.innerHTML=financeData.receivables.map(x=>`<p>🟢 ${x.name}: ${x.amount} QAR</p>`).join('');if(payList)payList.innerHTML=financeData.payables.map(x=>`<p>🔴 ${x.name}: ${x.amount} QAR</p>`).join('');if(cardList)cardList.innerHTML=financeData.cards.map(x=>`<p>💳 ${x.name}: ${x.amount} QAR</p>`).join('');}
 function exportBackup(){let blob=new Blob([JSON.stringify(financeData,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='abdulla-finance-backup.json';a.click();}
-window.onload=()=>{unlock();updateDashboard();renderLists();};
+window.onload=()=>{unlock();updateDashboard();renderLists();drawChart();};
