@@ -1,1 +1,79 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Abdulla Finance</title><style>body{font-family:Arial;background:#f5f5f5;margin:0;padding:15px}.card{background:white;border-radius:15px;padding:18px;margin:12px 0;font-size:20px}button{width:100%;padding:16px;margin:8px 0;border:0;border-radius:12px;font-size:18px}.green{color:green}.red{color:red}.module{display:none}</style></head><body><h1>💰 Abdulla Finance</h1><div class="card">💵 Cash<br><b>0 QAR</b></div><div class="card green">🟢 Money To Receive<br><b>0 QAR</b></div><div class="card red">🔴 Money To Pay<br><b>0 QAR</b></div><div class="card">💳 Credit Cards<br><b>0 QAR</b></div><div class="card">💰 Savings & 📈 Investments</div><h2>Menu</h2><button>🟢 Money To Receive</button><button>🔴 Money To Pay</button><button>💳 Credit Cards</button><button>💰 Savings</button><button>📈 Investments</button></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10251d">
+<title>Abdulla Finance</title>
+<style>
+:root{--bg:#f3f6f4;--ink:#17251e;--muted:#66766d;--green:#16794b;--line:#e4ebe6;--card:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,Arial,sans-serif;padding:22px}
+main{max-width:760px;margin:0 auto}.top{background:#10251d;color:#fff;border-radius:24px;padding:25px;margin-bottom:18px}.top .eyebrow{color:#a9c8b7;font-size:12px;text-transform:uppercase;letter-spacing:1.4px}.top h1{font-size:28px;margin:5px 0}.top p{margin:5px 0 0;color:#d1e0d7}.section{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin:14px 0;box-shadow:0 5px 18px #17251e08}.section h2{font-size:18px;margin:0 0 4px}.sub{color:var(--muted);font-size:13px;margin:0 0 15px}.hero-metric{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#edf7f0;border-radius:15px;padding:16px;margin-top:12px}.hero-metric strong{font-size:27px;color:var(--green)}.hero-metric span{display:block;color:var(--muted);font-size:12px}.table{width:100%;border-collapse:collapse}.table td{padding:11px 2px;border-bottom:1px solid var(--line)}.table td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}.table tr:last-child td{border-bottom:0}.total{font-weight:800}.pill{display:inline-block;padding:5px 9px;border-radius:20px;background:#e8f4ec;color:#176a43;font-size:12px;font-weight:700}.progress{height:9px;background:#e8eee9;border-radius:20px;overflow:hidden;margin:12px 0 7px}.progress>i{display:block;width:4.3625%;height:100%;background:#26945d;border-radius:20px}.muted{color:var(--muted);font-size:13px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mini{background:#f7faf8;border:1px solid var(--line);padding:14px;border-radius:15px}.mini strong{font-size:20px;display:block}.mini span{font-size:12px;color:var(--muted)}.note{background:#fff8e8;border:1px solid #f2e4bf;border-radius:14px;padding:13px;color:#735b20;font-size:13px}.footer{text-align:center;color:var(--muted);font-size:12px;padding:16px}
+@media(max-width:520px){body{padding:13px}.top{padding:21px}.section{padding:16px}.two{grid-template-columns:1fr 1fr}.table td{font-size:14px}}
+</style>
+</head>
+<body>
+<main>
+<header class="top">
+ <div class="eyebrow">Personal money dashboard</div>
+ <h1>💰 Abdulla Finance</h1>
+ <p>A clear monthly plan for expenses, repayments and savings.</p>
+</header>
+<section class="section">
+ <h2>November salary cycle</h2>
+ <p class="sub">This plan becomes active when the November 2026 salary is credited at the end of November. First full budget month: December 2026.</p>
+ <div class="hero-metric"><div><span>Emergency Fund contribution each month</span><strong>QAR 1,047</strong></div><span class="pill">Top priority</span></div>
+ <div class="progress" aria-label="Emergency fund target progress"><i></i></div>
+ <div class="muted">Emergency Fund target: QAR 24,000 · Monthly contribution: QAR 1,047</div>
+</section>
+<section class="section">
+ <h2>Monthly allocations</h2>
+ <p class="sub">Planned amounts in QAR. The full monthly plan is allocated, with no unassigned buffer.</p>
+ <table class="table" aria-label="Monthly budget allocations">
+ <tbody>
+ <tr><td>Home expenses</td><td>1,200</td></tr>
+ <tr><td>CBQ loan EMI</td><td>988</td></tr>
+ <tr><td>Qatar room rent</td><td>300</td></tr>
+ <tr><td>Food &amp; groceries</td><td>600</td></tr>
+ <tr><td>Petrol</td><td>300</td></tr>
+ <tr><td>Poochimmu car EMI reserve <span class="muted">(approx.)</span></td><td>215</td></tr>
+ <tr><td>Nithin repayment</td><td>500</td></tr>
+ <tr><td>Ajmal repayment</td><td>300</td></tr>
+ <tr><td>CBQ credit card repayment</td><td>1,000</td></tr>
+ <tr><td>Mutual fund SIP <span class="muted">(approx.)</span></td><td>400</td></tr>
+ <tr><td>Personal spending</td><td>150</td></tr>
+ <tr class="total"><td>Emergency Fund</td><td>1,047</td></tr>
+ </tbody>
+ </table>
+ <div class="hero-metric"><div><span>Unassigned monthly buffer</span><strong>QAR 0</strong></div><span class="pill">Fully allocated</span></div>
+</section>
+<section class="section">
+ <h2>Car EMI countdown</h2>
+ <p class="sub">Poochimmu car accessories EMI · ₹5,367 per installment (QAR reserve is approximate and depends on the exchange rate).</p>
+ <div class="two">
+  <div class="mini"><strong>5</strong><span>Installments remaining</span></div>
+  <div class="mini"><strong>QAR 215</strong><span>Monthly reserve (approx.)</span></div>
+ </div>
+ <p class="muted">Planned remaining installment months: December 2026 through April 2027, based on the five installments remaining after the November installment.</p>
+</section>
+<section class="section">
+ <h2>Debt repayment plan</h2>
+ <p class="sub">Monthly amounts reserved for repayments.</p>
+ <table class="table"><tbody>
+ <tr><td>Nithin</td><td>QAR 500 / month</td></tr>
+ <tr><td>Ajmal</td><td>QAR 300 / month</td></tr>
+ <tr><td>CBQ credit card</td><td>QAR 1,000 / month</td></tr>
+ </tbody></table>
+</section>
+<section class="section">
+ <h2>Savings &amp; investment plan</h2>
+ <table class="table"><tbody>
+ <tr><td>Emergency Fund</td><td>QAR 1,047 / month</td></tr>
+ <tr><td>Mutual fund SIP target</td><td>Approx. QAR 400 / month</td></tr>
+ </tbody></table>
+ <p class="note">Start the SIP only after the Geojit KYC / KRA compliance issue is resolved and the NRI investment setup is ready. The QAR 400 is an approximate conversion of the ₹10,000 monthly target.</p>
+</section>
+<div class="footer">Abdulla Finance · Budget plan effective from the November 2026 salary cycle · Amounts are planning estimates</div>
+</main>
+</body>
+</html>
