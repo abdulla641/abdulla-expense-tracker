@@ -124,6 +124,8 @@ $p('proExport').onclick=()=>{let payload={format:'abdulla-finance-backup-v2',cre
 $p('proImport').onchange=async e=>{let file=e.target.files[0];if(!file)return;try{if(file.size>2000000)throw Error('File too large');let v=JSON.parse(await file.text());if(v.format!=='abdulla-finance-backup-v2'||!v.pro||!v.original||typeof v.pro!=='object'||typeof v.original!=='object')throw Error('Invalid backup format');if(!confirm('Restore this backup? Current browser records will be replaced. Export a backup first.'))return;localStorage.setItem(oldKey,JSON.stringify(v.original));localStorage.setItem(newKey,JSON.stringify(v.pro));location.reload()}catch(err){alert('Could not restore: '+err.message)}finally{e.target.value=''}};
 const originalRender=window.render;window.render=function(){let c=document.getElementById('cycle').value,a=getBudget(c);base.splice(0,base.length,...names.map((n,i)=>[n,a[i],i===12?'PayLater installment':'Monthly budget']));originalRender();if(cycle.value===c)renderBudget()};
 const originalExpenses=window.renderExpenses;window.renderExpenses=function(){originalExpenses();let a=getBudget(document.getElementById('expenseCycle').value),entries=(data.expenses||{})[document.getElementById('expenseCycle').value]||[];[['foodLeft',3,'Food & groceries'],['petrolLeft',4,'Petrol'],['personalLeft',10,'Personal spending']].forEach(([id,i,cat])=>{let spent=entries.filter(x=>x.cat===cat).reduce((s,x)=>s+x.amount,0);document.getElementById(id).textContent=format(a[i]-spent)})};
+document.getElementById('cycle').onchange=()=>{window.render()};
+document.getElementById('expenseCycle').onchange=()=>{window.renderExpenses()};
 renderBudget();updateOriginal();
 })();
 </script></body></html>
