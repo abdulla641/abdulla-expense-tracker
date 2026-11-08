@@ -63,4 +63,66 @@ $('undoEmi').onclick=()=>{if(data.emiRemaining<5){data.emiRemaining++;save();ren
 function renderExpenses(){const entries=data.expenses[expenseCycle.value]||[];const used=(cat)=>entries.filter(x=>x.cat===cat).reduce((s,x)=>s+x.amount,0);$('foodLeft').textContent=money(600-used('Food & groceries'));$('petrolLeft').textContent=money(300-used('Petrol'));$('personalLeft').textContent=money(150-used('Personal spending'));$('spentTotal').textContent=money(entries.reduce((s,x)=>s+x.amount,0));const el=$('expenseList');el.replaceChildren();if(!entries.length){const p=document.createElement('p');p.className='hint';p.textContent='No expenses recorded for this cycle.';el.append(p)}entries.slice().reverse().forEach((x,i)=>{const row=document.createElement('div');row.className='row';const left=document.createElement('span');left.textContent=x.cat+(x.note?' · '+x.note:'');const right=document.createElement('span');const b=document.createElement('b');b.textContent=money(x.amount)+' ';const del=document.createElement('button');del.type='button';del.className='action secondary';del.style.padding='5px 9px';del.textContent='Undo';del.onclick=()=>{if(confirm('Remove this expense?')){entries.splice(entries.length-1-i,1);save();renderExpenses()}};right.append(b,del);row.append(left,right);el.append(row)})}
 $('expenseForm').onsubmit=e=>{e.preventDefault();const amount=Number($('expenseAmount').value);if(!Number.isFinite(amount)||amount<=0)return;const cycle=expenseCycle.value;if(!data.expenses[cycle])data.expenses[cycle]=[];data.expenses[cycle].push({cat:$('expenseCategory').value,amount:Math.round(amount*100)/100,note:$('expenseNote').value.trim(),date:new Date().toISOString().slice(0,10)});save();$('expenseAmount').value='';$('expenseNote').value='';renderExpenses()};
 render();renderExpenses();
+</script><style>
+.fin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.fin-grid label{display:grid;gap:5px;font-size:13px;color:#587067}.fin-grid input{width:100%;padding:10px;border:1px solid #d8e5dc;border-radius:10px;font:inherit}.fin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.fin-table{width:100%;border-collapse:collapse}.fin-table td{padding:9px 4px;border-bottom:1px solid #e5ede9}.fin-table input{max-width:115px;padding:8px;border:1px solid #d8e5dc;border-radius:8px}.fin-table td:last-child{text-align:right}.fin-pill{display:inline-block;background:#e7f6ed;color:#13623d;padding:5px 10px;border-radius:30px;font-size:12px}.fin-note{font-size:12px;color:#687a70}.fin-table button{padding:6px 10px;border:0;border-radius:8px;cursor:pointer}
+</style>
+<section class="card" id="financePro" aria-label="Financial command center">
+<h2>Financial Command Center <span class="fin-pill">2.0</span></h2>
+<p class="sub">November 2026 salary funds December living expenses. Edit each cycle independently. All amounts are QAR; salary remains private.</p>
+<div class="controls"><label for="proCycle">Salary cycle</label><select id="proCycle"></select><button class="action secondary" id="proLoad">Load recommended budget</button></div>
+<div class="metrics" style="margin:12px 0"><div class="metric"><span>Planned allocations</span><strong id="proPlanned">—</strong></div><div class="metric"><span>Completed allocations</span><strong id="proPaid">—</strong></div></div>
+<h3 style="font-size:15px">Monthly budget editor</h3><div id="proBudget"></div>
+<p class="fin-note">Saving a budget updates allocation checklists and daily expense envelopes for the selected cycle. Existing payment ticks and expense entries are preserved.</p>
+<div class="fin-actions"><button class="action" id="proSave">Save this month's budget</button></div>
+<h3 style="font-size:15px;margin-top:24px">Debt balances & cash savings</h3>
+<div class="fin-grid">
+<label>CBQ loan balance shown in app<input id="proLoan" type="number" min="0" step=".01"></label>
+<label>Credit card outstanding<input id="proCard" type="number" min="0" step=".01"></label>
+<label>Ajmal outstanding<input id="proAjmal" type="number" min="0" step=".01"></label>
+<label>Nithin outstanding<input id="proNithin" type="number" min="0" step=".01"></label>
+<label>Watch installments remaining<input id="proWatch" type="number" min="0" max="3" step="1"></label>
+<label>Emergency Fund actual balance<input id="proEf" type="number" min="0" step=".01"></label>
+<label>Vacation savings actual balance<input id="proVacation" type="number" min="0" step=".01"></label>
+<label>Investments contributed to date<input id="proInvest" type="number" min="0" step=".01"></label>
+</div>
+<p class="fin-note">Update actual balances from bank statements. These values do not automatically change when you tick a planned payment.</p>
+<div class="fin-actions"><button class="action" id="proSaveBalances">Save actual balances</button></div>
+<h3 style="font-size:15px;margin-top:24px">Monthly closing</h3>
+<div class="fin-grid"><label>Actual cash saved this cycle<input id="proCashSaved" type="number" min="0" step=".01"></label><label>Closing notes<input id="proNotes" type="text" placeholder="Card balance, unusual costs, etc."></label></div>
+<div class="fin-actions"><button class="action" id="proClose">Save monthly review</button></div><p id="proReview" class="fin-note"></p>
+<h3 style="font-size:15px;margin-top:24px">Backup & restore</h3>
+<p class="fin-note">Your data is stored only in this browser. Export a backup regularly; restoring replaces local data after confirmation. Keep backups private.</p>
+<div class="fin-actions"><button class="action secondary" id="proExport">Export JSON backup</button><label class="action secondary" style="cursor:pointer">Restore backup <input type="file" id="proImport" accept=".json,application/json" hidden></label></div>
+<p id="proStatus" class="fin-note" role="status"></p>
+</section>
+<script>
+(function(){
+const oldKey='abdullaFinanceBudget2026v1',newKey='abdullaFinanceProV2';
+let pro={};try{pro=JSON.parse(localStorage.getItem(newKey))||{}}catch(e){}
+pro.budgets=pro.budgets||{};pro.closings=pro.closings||{};
+pro.balances=pro.balances||{loan:10054.44,card:5800,ajmal:2000,nithin:912,watch:3,ef:0,vacation:0,invest:0};
+const $p=id=>document.getElementById(id);
+const names=['Home expenses','CBQ loan EMI','Qatar room rent','Food & groceries','Petrol','Poochimmu car EMI reserve','Nithin repayment','Ajmal repayment','CBQ credit card repayment','Mutual fund SIP','Personal spending','Emergency Fund','Huawei Watch PayLater'];
+const standard=[1200,988,300,500,250,215,500,300,1000,400,100,0,149];
+const november=[1200,988,300,500,250,215,500,2000,265,400,100,0,149];
+const format=n=>'QAR '+Number(n||0).toLocaleString('en-US',{maximumFractionDigits:2});
+const persist=()=>localStorage.setItem(newKey,JSON.stringify(pro));
+const cycle=$p('proCycle');cycle.innerHTML=document.getElementById('cycle').innerHTML;cycle.value='2026-11';
+const recommended=c=>{let a=(c==='2026-11'?november:standard).slice();if(c>='2026-12')a[7]=0;if(c>='2027-01')a[6]=0;else if(c==='2026-12')a[6]=412;if(c>='2027-02')a[12]=0;if(c>='2027-04')a[5]=0;return a};
+function getBudget(c){return pro.budgets[c]||recommended(c)}
+function renderBudget(){let a=getBudget(cycle.value),html='<table class="fin-table"><tbody>';names.forEach((name,i)=>html+='<tr><td>'+name+'</td><td><input aria-label="'+name+'" type="number" min="0" step=".01" data-budget="'+i+'" value="'+a[i]+'"></td></tr>');$p('proBudget').innerHTML=html+'</tbody></table>';let old=JSON.parse(localStorage.getItem(oldKey)||'{}'),done=(old.months||{})[cycle.value]||[];$p('proPlanned').textContent=format(a.reduce((x,y)=>x+y,0));$p('proPaid').textContent=format(a.reduce((x,y,i)=>x+(done.includes(i)?y:0),0));let close=pro.closings[cycle.value]||{};$p('proCashSaved').value=close.cashSaved??'';$p('proNotes').value=close.notes||'';$p('proReview').textContent=close.savedAt?'Last reviewed '+new Date(close.savedAt).toLocaleDateString(): 'Not reviewed yet'}
+function updateOriginal(){let c=cycle.value,a=getBudget(c);if(typeof base!=='undefined'){base.splice(0,base.length,...names.map((n,i)=>[n,a[i],i===12?'Due 6 Dec 2026; monthly until Feb 2027':'Editable budget']));if(document.getElementById('cycle').value===c)render();if(document.getElementById('expenseCycle').value===c)renderExpenses()}}
+cycle.onchange=renderBudget;
+$p('proLoad').onclick=()=>{if(confirm('Load the recommended budget for this cycle? Existing recorded expenses and payment ticks will stay.')){pro.budgets[cycle.value]=recommended(cycle.value);persist();renderBudget();updateOriginal()}};
+$p('proSave').onclick=()=>{let a=[...document.querySelectorAll('[data-budget]')].map(x=>Number(x.value));if(a.some(x=>!Number.isFinite(x)||x<0)){alert('Enter valid non-negative amounts.');return}pro.budgets[cycle.value]=a;persist();renderBudget();updateOriginal();$p('proStatus').textContent='Budget saved for '+cycle.value};
+const fields={loan:'proLoan',card:'proCard',ajmal:'proAjmal',nithin:'proNithin',watch:'proWatch',ef:'proEf',vacation:'proVacation',invest:'proInvest'};
+Object.entries(fields).forEach(([k,id])=>$p(id).value=pro.balances[k]??0);
+$p('proSaveBalances').onclick=()=>{let b={};for(let [k,id] of Object.entries(fields)){b[k]=Number($p(id).value);if(!Number.isFinite(b[k])||b[k]<0){alert('Please enter valid balances.');return}}pro.balances=b;persist();$p('proStatus').textContent='Actual balances saved'};
+$p('proClose').onclick=()=>{let n=Number($p('proCashSaved').value);if(!Number.isFinite(n)||n<0){alert('Enter actual cash saved.');return}pro.closings[cycle.value]={cashSaved:n,notes:$p('proNotes').value.trim(),savedAt:new Date().toISOString()};persist();renderBudget();$p('proStatus').textContent='Monthly review saved'};
+$p('proExport').onclick=()=>{let payload={format:'abdulla-finance-backup-v2',created:new Date().toISOString(),original:JSON.parse(localStorage.getItem(oldKey)||'{}'),pro};let blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='abdulla-finance-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+$p('proImport').onchange=async e=>{let file=e.target.files[0];if(!file)return;try{if(file.size>2000000)throw Error('File too large');let v=JSON.parse(await file.text());if(v.format!=='abdulla-finance-backup-v2'||!v.pro||!v.original||typeof v.pro!=='object'||typeof v.original!=='object')throw Error('Invalid backup format');if(!confirm('Restore this backup? Current browser records will be replaced. Export a backup first.'))return;localStorage.setItem(oldKey,JSON.stringify(v.original));localStorage.setItem(newKey,JSON.stringify(v.pro));location.reload()}catch(err){alert('Could not restore: '+err.message)}finally{e.target.value=''}};
+const originalRender=window.render;window.render=function(){let c=document.getElementById('cycle').value,a=getBudget(c);base.splice(0,base.length,...names.map((n,i)=>[n,a[i],i===12?'PayLater installment':'Monthly budget']));originalRender();if(cycle.value===c)renderBudget()};
+const originalExpenses=window.renderExpenses;window.renderExpenses=function(){originalExpenses();let a=getBudget(document.getElementById('expenseCycle').value),entries=(data.expenses||{})[document.getElementById('expenseCycle').value]||[];[['foodLeft',3,'Food & groceries'],['petrolLeft',4,'Petrol'],['personalLeft',10,'Personal spending']].forEach(([id,i,cat])=>{let spent=entries.filter(x=>x.cat===cat).reduce((s,x)=>s+x.amount,0);document.getElementById(id).textContent=format(a[i]-spent)})};
+renderBudget();updateOriginal();
+})();
 </script></body></html>
